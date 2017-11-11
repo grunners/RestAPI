@@ -1,20 +1,19 @@
-
-var express = require('express'); // Web Framework
-var bodyParser = require("body-parser");
+var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 var sql = require('mssql'); // MS Sql Server client
 
-// Setting Base directory
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json())
 
-//CORS Middleware
-app.use(function (req, res, next) {
-    //Enabling CORS 
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization");
-    next();
-});
+// //CORS Middleware
+// app.use(function (req, res, next) {
+//     //Enabling CORS 
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization");
+//     next();
+// });
 
 // Connection string parameters.
 var sqlConfig = {
@@ -32,7 +31,9 @@ var server = app.listen(8080, function () {
     console.log("app listening at http://%s:%s", host, port)
 });
 
-// queries
+// *** queries ***
+
+// GET (select)
 app.get('/names', function (req, res) {
     sql.connect(sqlConfig, function(err) {
         if (!err) {
@@ -49,3 +50,30 @@ app.get('/names', function (req, res) {
         
     });
 })
+
+// POST (insert)
+app.post('/names/new', function (req, res) {
+
+    var email = req.body.email;
+    console.log("Email to be inserted: " + email);
+    
+    sql.connect(sqlConfig, function(err) {
+        if (!err) {
+            console.log("Request successful");
+            var request = new sql.Request();
+            request.query("INSERT INTO [users] (email) VALUES ('" + email + "')", function(err, recordset) {
+                if(err) console.log(err);
+                res.end(JSON.stringify(recordset)); // Result in JSON format
+            });
+        } 
+        else {
+            console.log("Error while connecting to database: " + err);
+        }
+        
+    });
+})
+
+// PUT (update)
+
+
+// DELETE (delete)

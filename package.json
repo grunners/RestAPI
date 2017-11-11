@@ -1,11 +1,12 @@
 {
   "name": "testapi",
   "version": "1.0.0",
+  "private": true,
   "description": "Test Rest API for SQL",
   "main": "server.js",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "express": "^4.14.0",
-    "body-parser": "^1.15.2",
     "mssql": "^ 3.3.0"
   },
   "scripts": {
