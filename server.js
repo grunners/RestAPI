@@ -39,7 +39,7 @@ app.get('/names', function (req, res) {
         if (!err) {
             console.log("Request successful");
             var request = new sql.Request();
-            request.query('select name from users where id=2', function(err, recordset) {
+            request.query('select name from users', function(err, recordset) {
                 if(err) console.log(err);
                 res.end(JSON.stringify(recordset)); // Result in JSON format
             });
@@ -54,17 +54,18 @@ app.get('/names', function (req, res) {
 // POST (insert)
 app.post('/names/new', function (req, res) {
 
-    var email = req.body.email;
-    console.log("Email to be inserted: " + email);
+    var name = req.query.name;
+    var email = req.query.email;
+    console.log(name + " " + email);
     
     sql.connect(sqlConfig, function(err) {
         if (!err) {
-            console.log("Request successful");
             var request = new sql.Request();
-            request.query("INSERT INTO [users] (email) VALUES ('" + email + "')", function(err, recordset) {
+            request.query("INSERT INTO users (name, email) VALUES ('" + name + "', '" + email + "')", function(err, recordset) {
                 if(err) console.log(err);
                 res.end(JSON.stringify(recordset)); // Result in JSON format
             });
+            console.log("Request successful");
         } 
         else {
             console.log("Error while connecting to database: " + err);
@@ -74,6 +75,23 @@ app.post('/names/new', function (req, res) {
 })
 
 // PUT (update)
+app.put('/names/update', function (req, res) {
+    var name = req.query.name;
+
+    sql.connect(sqlConfig, function(err) {
+        if (!err) {
+            var request = new sql.Request();
+            request.query("UPDATE users SET name='" + name + "'", function(err, recordset) {
+                if(err) console.log(err);
+                res.end(JSON.stringify(recordset));
+            });
+            console.log("UPDATE successful");
+        }
+        else {
+            console.log("Error while connecting to database: " + err);
+        }
+    })
+})
 
 
 // DELETE (delete)
