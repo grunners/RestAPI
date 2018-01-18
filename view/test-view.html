@@ -1,0 +1,48 @@
+<html>
+	<body>
+		<form id="form1">
+			<input type="text" id="txtName" value="Adrian" />
+			<input type="submit" value="Search"></input>
+			<p id="output"></p>
+		</form>
+		
+		
+	</body>
+
+	<!-- jQuery CDN -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			$('#form1').on('submit', function (e) {
+				e.preventDefault();
+
+				var name = $('#txtName').val();
+
+				$.ajax({
+					url: 'http://localhost:8080/extensions/',
+					data: {
+						name: name
+					},
+					type: 'GET',
+					success: function(data) {
+						try {
+							var myObj = JSON.parse(data);
+							console.log(JSON.parse(data));
+							$('#output').html(myObj[0].extension);
+						}
+						catch(ex) {
+							$('#output').html("This user does not exist or does not have an extension");					
+						}
+					},
+					error: function(err) {
+						console.log(err);
+					}
+				});
+
+			});
+			
+		});
+	</script>
+</html>
+

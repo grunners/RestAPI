@@ -1,0 +1,52 @@
+<html>
+	<body>
+		<form id="form1">
+			<input type="text" id="txtRef" value="220029" />
+			<input type="submit" value="Search"></input>
+			<p id="output"></p>
+		</form>
+		
+		
+	</body>
+
+	<!-- jQuery CDN -->
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+	<script type="text/javascript">
+		$(function() {
+			$('#form1').on('submit', function (e) {
+				e.preventDefault();
+
+				$.ajax({
+					url: 'http://localhost:8080/refs/',
+					data: {
+						ref: $('#txtRef').val()
+					},
+					type: 'GET',
+					success: function(data) {
+						try {
+
+							var myObj = JSON.parse(data);
+							if (myObj.length == 1) {
+								console.log(myObj);
+								$('#output').html(myObj[0]['First Name'] + " " + myObj[0]['Surname'] + " " + myObj[0]['E-Mail']); //works
+							}
+							else {
+								$('#output').html("User not found");
+							}
+						}
+						catch(ex) {
+							$('#output').html("User not found");					
+						}
+					},
+					error: function(err) {
+						console.log(err);
+					}
+				});
+
+			});
+			
+		});
+	</script>
+</html>
+

@@ -29,13 +29,12 @@ var sqlConfig = {
     // server: '82.113.145.162\\SQLEXPRESS',
     // database: 'NCL'
 
-    //***NovaMaster***
-    //driver: 'msnodesqlv8',
-    user: 'Intranet',
-    password: 'Lucy2666213^',
-    server: 'nclsqlsrv001',
-    database: 'NovaMaster'
 }
+
+//***NovaMaster***Because of domain security we connect like this***
+// sqlConfig = "Data Source=nclsqlsrv001,1433;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NovaMaster;Integrated Security=True"
+//sqlConfig = "Data Source=localhost\\sqlexpress;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NBSA;Integrated Security=True"
+sqlConfig = "Data Source=nclsqlsrv001;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NovaMaster;Integrated Security=True"
 
 // Start server and listen on http://localhost:8081/
 var server = app.listen(8080, function () {
@@ -47,15 +46,41 @@ var server = app.listen(8080, function () {
 
 // *** queries ***
 
-// GET (select) - names
-app.get('/names', function (req, res) {
+// GET (select) - refs
+app.get('/refs', function (req, res) {
+    res.setHeader('Access-Control-Allow-Origin', 'null');
+    //vars
+    var ref = req.query.ref;
+    console.log(ref);
     sql.connect(sqlConfig, function(err) {
         if (!err) {
             console.log("Request successful");
             var request = new sql.Request();
-            request.query('select name from tblTest', function(err, recordset) {
+            request.query("select * from Jedds_Data where [Gabem reference Number]='" + ref + "'", function(err, recordset) {
                 if(err) console.log(err);
-                res.end(JSON.stringify(recordset[0])); // Result in JSON format
+                res.end(JSON.stringify(recordset)); // Result in JSON format
+            });
+        } 
+        else {
+            console.log("Error while connecting to database: " + err);
+        }
+        
+    });
+})
+
+// GET (select) - extensions
+app.get('/extensions', function (req, res) {
+    res.setHeader('Access-Control-Allow-Origin', 'null');
+    //vars
+    var name = req.query.name;
+    console.log(name);
+    sql.connect(sqlConfig, function(err) {
+        if (!err) {
+            console.log("Request successful");
+            var request = new sql.Request();
+            request.query("select extension from tblExtensions where name='" + name + "'", function(err, recordset) {
+                if(err) console.log(err);
+                res.end(JSON.stringify(recordset)); // Result in JSON format
             });
         } 
         else {
