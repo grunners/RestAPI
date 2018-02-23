@@ -34,7 +34,7 @@ var sqlConfig = {
 //***NovaMaster***Because of domain security we connect like this***
 // sqlConfig = "Data Source=nclsqlsrv001,1433;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NovaMaster;Integrated Security=True"
 //sqlConfig = "Data Source=localhost\\sqlexpress;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NBSA;Integrated Security=True"
-sqlConfig = "Data Source=nclsqlsrv001;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NovaMaster;Integrated Security=True"
+sqlConfig = "Data Source=192.168.1.97;User Id=NCS\\Administrator;Password=fru2upat;Initial Catalog=NovaMaster;Integrated Security=True"
 
 // Start server and listen on http://localhost:8081/
 var server = app.listen(8080, function () {
